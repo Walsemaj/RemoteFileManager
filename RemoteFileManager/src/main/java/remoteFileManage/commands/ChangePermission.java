@@ -9,25 +9,30 @@ import java.nio.file.attribute.PosixFilePermissions;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import remoteFileManage.FileManagePermission;
 import remoteFileManage.FileManageUtil;
 
 public class ChangePermission implements FileCommand {
-		
+	
 	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 //		"permsCode":"000","action":"changePermissions","perms":"---------","items":["/temp/Testing.notesairdropdocument"],"recursive":false		
 		try {
-			String path = params.getString("item");
-			String perms = params.getString("perms"); // "653"
-			String permsCode = params.getString("permsCode"); // "rw-r-x-wx"
-			boolean recursive = params.getBoolean("recursive");
-			LOG.debug("changepermissions path: {} perms: {} permsCode: {} recursive: {}", path, perms, permsCode,
-					recursive);
-			File f = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
-			setPermissions(f, permsCode, recursive);
+			JSONArray array = params.getJSONArray("items");
+			for (Object temp : array) {
+				String path = StringUtils.substringAfter(temp.toString(), "/");
+				String perms = params.getString("perms"); // "653"
+				String permsCode = params.getString("permsCode"); // "rw-r-x-wx"
+				boolean recursive = params.getBoolean("recursive");
+				LOG.debug("changepermissions path: {} perms: {} permsCode: {} recursive: {}", path, perms, permsCode,
+						recursive);
+//				File f = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
+				File f = new File(REPOSITORY_BASE_URL, path);
+				setPermissions(f, permsCode, perms, recursive);
+			}
 			return FileManageUtil.success(params);
 		} catch (Exception e) {
 			LOG.error("changepermissions", e);
@@ -35,27 +40,33 @@ public class ChangePermission implements FileCommand {
 		}
 	}
 	
-	private String setPermissions(File file, String permsCode, boolean recursive) throws IOException {
+	private String setPermissions(File file, String permsCode, String perms, boolean recursive) throws IOException {
 		// http://www.programcreek.com/java-api-examples/index.php?api=java.nio.file.attribute.PosixFileAttributes
 		PosixFileAttributeView fileAttributeView = Files.getFileAttributeView(file.toPath(),
 				PosixFileAttributeView.class);
 		if (fileAttributeView == null) //For Windows
-			return setACL(file, permsCode, recursive);
+			return setACL(file, perms, recursive);
 		fileAttributeView.setPermissions(PosixFilePermissions.fromString(permsCode));
 		if (file.isDirectory() && recursive && file.listFiles() != null) {
 			for (File f : file.listFiles()) {
-				setPermissions(f, permsCode, recursive);
+				setPermissions(f, permsCode, perms, recursive);
 			}
 		}
 		return permsCode;
 	}
 	
-	private String setACL(File file, String permsCode, boolean recursive) throws IOException {
-
+	private String setACL(File file, String perms, boolean recursive) throws IOException {
+		
 		AclFileAttributeView aclView = Files.getFileAttributeView(file.toPath(), AclFileAttributeView.class);
 		if (aclView == null) {
 			System.out.format("ACL view  is not  supported.%n");
 			throw new IOException();
+		}
+		new FileManagePermission().setPermissions(file, perms);
+		if (file.isDirectory() && recursive && file.listFiles() != null) {
+			for (File f : file.listFiles()) {
+				setACL(f, perms, recursive);
+			}
 		}
 		return "";
 	}
