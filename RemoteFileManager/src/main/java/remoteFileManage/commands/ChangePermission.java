@@ -19,7 +19,6 @@ import remoteFileManage.FileManageUtil;
 public class ChangePermission implements FileCommand {
 	
 	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
-//		"permsCode":"000","action":"changePermissions","perms":"---------","items":["/temp/Testing.notesairdropdocument"],"recursive":false		
 		try {
 			JSONArray array = params.getJSONArray("items");
 			for (Object temp : array) {
@@ -41,7 +40,6 @@ public class ChangePermission implements FileCommand {
 	}
 	
 	private String setPermissions(File file, String permsCode, String perms, boolean recursive) throws IOException {
-		// http://www.programcreek.com/java-api-examples/index.php?api=java.nio.file.attribute.PosixFileAttributes
 		PosixFileAttributeView fileAttributeView = Files.getFileAttributeView(file.toPath(),
 				PosixFileAttributeView.class);
 		if (fileAttributeView == null) //For Windows
