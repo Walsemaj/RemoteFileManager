@@ -347,8 +347,8 @@ public class FileManagePermission {
 		public ClassPermissionObject(String principalName, String perms) {
 			this.principalName = principalName;
 			this.CanRead = (perms.charAt(0) == FileManageConstant.READ);
-			this.CanWrite = (perms.charAt(1) == FileManageConstant.EXECUTE);
-			this.CanExecute = (perms.charAt(2) == FileManageConstant.WRITE);
+			this.CanWrite = (perms.charAt(1) == FileManageConstant.WRITE);
+			this.CanExecute = (perms.charAt(2) == FileManageConstant.EXECUTE);
 			this.aclEntries = null;
 		}
 
