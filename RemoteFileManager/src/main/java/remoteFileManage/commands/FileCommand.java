@@ -6,7 +6,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@FunctionalInterface
 public interface FileCommand {
 	Logger LOG = LoggerFactory.getLogger(FileCommand.class);
 	
