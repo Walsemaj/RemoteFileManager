@@ -12,5 +12,7 @@ Run
 1) git clone https://github.com/Walsemaj/RemoteFileManager
 2) cd RemoteFileManager/RemoteFileManager
 3) mvn package
-4) target/bin/webapp.bat
+4) 
+    On Windows, target/bin/webapp.bat
+    On Linux, sh target/bin/webapp
 5) localhost:8080/
