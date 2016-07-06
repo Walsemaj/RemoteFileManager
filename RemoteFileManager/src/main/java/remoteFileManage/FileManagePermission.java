@@ -114,7 +114,7 @@ public class FileManagePermission {
 	public void setPermissions(File file, String perms)  throws IOException {
 		//Split "---------" into "---", "---", "---"
 		String[] ps = perms.split("(?<=\\G...)");
-		for(String code : ps) System.out.println("SetPermissions: " + code);
+		for(String code : ps) LOG.debug("SetPermissions: " + code);
 		
 		
 		Map<String, ClassPermissionObject> fileCurrentPermissions = new HashMap<>();
@@ -201,18 +201,18 @@ public class FileManagePermission {
 	    {
 	    	AclEntry entry = it.next();
 	    	if(entry != null) {
-	    		System.out.println("Contains Entry: " + aclEntries.contains(entry));
-	    		System.out.println("Remove Entry: " + entry.principal());
-	    		System.out.println("Remove Entry: " + entry.permissions());
+	    		LOG.debug("Contains Entry: " + aclEntries.contains(entry));
+	    		LOG.debug("Remove Entry: " + entry.principal());
+	    		LOG.debug("Remove Entry: " + entry.permissions());
 	    		aclEntries.remove(entry);
 	    	}
 	    }
 	    
 		if(newPermissionObject.getCanRead())
 		{
-			System.out.println("UPDATE READ: " + principalName);
-		    System.out.println("UPDATE READ: " + FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByName(principalName));
-			System.out.println("UPDATE READ: " + READ_ACCESS.DEFAULT.returnSetOfAclEntryPermission());
+			LOG.debug("UPDATE READ: " + principalName);
+		    LOG.debug("UPDATE READ: " + FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByName(principalName));
+			LOG.debug("UPDATE READ: " + READ_ACCESS.DEFAULT.returnSetOfAclEntryPermission());
 			
 			AclEntry.Builder builder = AclEntry.newBuilder();
 		    builder.setPrincipal(FileSystems.getDefault()
@@ -224,9 +224,9 @@ public class FileManagePermission {
 		}
 		if(newPermissionObject.getCanWrite())
 		{
-			System.out.println("UPDATE WRITE: " + principalName);
-		    System.out.println("UPDATE WRITE: " + FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByName(principalName));
-			System.out.println("UPDATE WRITE: " + WRITE_ACCESS.DEFAULT.returnSetOfAclEntryPermission());
+			LOG.debug("UPDATE WRITE: " + principalName);
+		    LOG.debug("UPDATE WRITE: " + FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByName(principalName));
+			LOG.debug("UPDATE WRITE: " + WRITE_ACCESS.DEFAULT.returnSetOfAclEntryPermission());
 			
 			AclEntry.Builder builder = AclEntry.newBuilder();
 		    builder.setPrincipal(FileSystems.getDefault()
@@ -237,9 +237,9 @@ public class FileManagePermission {
 		}
 		if(newPermissionObject.getCanExecute())
 		{
-			System.out.println("UPDATE EXECUTE: " + principalName);
-		    System.out.println("UPDATE EXECUTE: " + FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByName(principalName));
-			System.out.println("UPDATE EXECUTE: " + EXECUTE_ACCESS.DEFAULT.returnSetOfAclEntryPermission());
+			LOG.debug("UPDATE EXECUTE: " + principalName);
+		    LOG.debug("UPDATE EXECUTE: " + FileSystems.getDefault().getUserPrincipalLookupService().lookupPrincipalByName(principalName));
+			LOG.debug("UPDATE EXECUTE: " + EXECUTE_ACCESS.DEFAULT.returnSetOfAclEntryPermission());
 			
 			AclEntry.Builder builder = AclEntry.newBuilder();
 		    builder.setPrincipal(FileSystems.getDefault()
@@ -249,10 +249,10 @@ public class FileManagePermission {
 			aclEntries.add(builder.build());
 		}
 		
-		for (AclEntry aclEntry : aclEntries) {
-	    System.out.println("Final Image PRINCIPAL: " + aclEntry.principal());
-	    System.out.println("Final Image PERMISSIONS: " + aclEntry.permissions() + "\n");		
-		}
+//		for (AclEntry aclEntry : aclEntries) {
+//	    System.out.println("Final Image PRINCIPAL: " + aclEntry.principal());
+//	    System.out.println("Final Image PERMISSIONS: " + aclEntry.permissions() + "\n");		
+//		}
 		
 		return aclEntries;
 	}
