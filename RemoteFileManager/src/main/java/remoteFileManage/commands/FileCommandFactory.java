@@ -2,7 +2,6 @@ package remoteFileManage.commands;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
