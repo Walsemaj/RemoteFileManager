@@ -13,7 +13,7 @@ import remoteFileManage.FileManageUtil;
 
 public class Copy implements FileCommand {
 
-	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			JSONArray array = params.getJSONArray("items");
 			// Scenario #1 copy a file into a directory
@@ -46,8 +46,8 @@ public class Copy implements FileCommand {
 
 				// File srcFile = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL), path);
 				// File destFile = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL), newPath + "/" + params.getString("singleFilename"));
-				File srcFile = new File(REPOSITORY_BASE_URL, path);
-				File destFile = new File(REPOSITORY_BASE_URL, newPath + "/" + filename);
+				File srcFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
+				File destFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), newPath + "/" + filename);
 				if (srcFile.isFile()) {
 					FileUtils.copyFile(srcFile, destFile);
 				} else {

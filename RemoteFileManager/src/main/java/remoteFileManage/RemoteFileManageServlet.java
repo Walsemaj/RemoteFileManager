@@ -44,6 +44,7 @@ public class RemoteFileManageServlet extends HttpServlet {
 
 	private static final long serialVersionUID = -8453502699403909016L;
 
+	private boolean CONTEXT_GET_REAL_PATH = true;
 	private String REPOSITORY_BASE_URL = "";
 	
 	private FileCommandFactory factory;
@@ -62,9 +63,10 @@ public class RemoteFileManageServlet extends HttpServlet {
 				Properties prop = new Properties();
 				// load a properties file from class path, inside static method
 				prop.load(propertiesFile);
+				CONTEXT_GET_REAL_PATH = Boolean.valueOf(prop.getProperty("context.get.real.path")); //true - web content root
 				REPOSITORY_BASE_URL = prop.getProperty("repository.base.url", REPOSITORY_BASE_URL);
 				if (!"".equals(REPOSITORY_BASE_URL)
-						&& !new File(getServletContext().getRealPath(REPOSITORY_BASE_URL)).isDirectory()) {
+						&& !new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL)).isDirectory()) {
 					throw new ServletException("invalid repository.base.url");
 				}
 				LOG.info("REPOSITORY_BASE_URL: " + REPOSITORY_BASE_URL);
@@ -94,7 +96,8 @@ public class RemoteFileManageServlet extends HttpServlet {
 			String path = request.getParameter("path");
 	
 //			File file = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL), path);
-			File file = new File(REPOSITORY_BASE_URL, path);
+//			File file = new File(REPOSITORY_BASE_URL, path);
+			File file = new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL));
 	
 			if (!file.isFile()) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource Not Found");
@@ -141,7 +144,7 @@ public class RemoteFileManageServlet extends HttpServlet {
 			LOG.debug(FileManageUtil.printHeaderParams(request));
 			// if request contains multipart-form-data
 			if (ServletFileUpload.isMultipartContent(request)) {
-				JSONObject responseJsonObject = UploadFile.apply(request, REPOSITORY_BASE_URL);
+				JSONObject responseJsonObject = UploadFile.apply(request, this.getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL);
 
 				response.setContentType("application/json");
 				PrintWriter out = response.getWriter();
@@ -175,7 +178,7 @@ public class RemoteFileManageServlet extends HttpServlet {
 
 			Action action = Action.valueOf(params.getString("action")); //Throws IlllegalArgulmentException if not found
 			
-			responseJsonObject = factory.executeFileCommand(action, this.getServletContext(), REPOSITORY_BASE_URL, params);
+			responseJsonObject = factory.executeFileCommand(action, this.getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL, params);
 			
 			if (responseJsonObject == null) {
 				responseJsonObject = FileManageUtil.error("generic FileManageUtil.error : responseJsonObject is null");

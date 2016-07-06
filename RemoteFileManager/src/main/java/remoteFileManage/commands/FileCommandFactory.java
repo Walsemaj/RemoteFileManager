@@ -24,10 +24,10 @@ public final class FileCommandFactory {
 		fileCommands.put(action, fileCommand);
 	}
 
-	public JSONObject executeFileCommand(Action action, ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	public JSONObject executeFileCommand(Action action, ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			if (fileCommands.containsKey(action)) {
-				return fileCommands.get(action).apply(context, REPOSITORY_BASE_URL, params);
+				return fileCommands.get(action).apply(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL, params);
 			} else
 				throw new ServletException("not implemented");
 		} catch (Exception e) {

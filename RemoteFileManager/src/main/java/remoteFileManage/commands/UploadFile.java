@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,7 +28,7 @@ public class UploadFile {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(UploadFile.class);
 	
-	public static JSONObject apply(HttpServletRequest request, String REPOSITORY_BASE_URL) throws ServletException {
+	public static JSONObject apply(HttpServletRequest request, ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL) throws ServletException {
 		// URL: $config.uploadUrl, Method: POST, Content-Type:
 		// multipart/form-data
 		// Unlimited file upload, each item will be enumerated as file-1,
@@ -59,7 +60,7 @@ public class UploadFile {
 					LOG.debug("Destination: " + REPOSITORY_BASE_URL + destination);
 					LOG.debug("File Name: " + fileEntry.getKey());
 					// File f = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL + destination), fileEntry.getKey());
-					File f = new File(REPOSITORY_BASE_URL + destination + "/" + fileEntry.getKey());
+					File f = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + destination + "/" + fileEntry.getKey());
 					if (!write(fileEntry.getValue(), f)) {
 						throw new Exception("write FileManageUtil.error");
 					}

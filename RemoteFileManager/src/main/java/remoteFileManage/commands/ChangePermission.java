@@ -18,7 +18,7 @@ import remoteFileManage.FileManageUtil;
 
 public class ChangePermission implements FileCommand {
 	
-	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			JSONArray array = params.getJSONArray("items");
 			for (Object temp : array) {
@@ -29,7 +29,7 @@ public class ChangePermission implements FileCommand {
 				LOG.debug("changepermissions path: {} perms: {} permsCode: {} recursive: {}", path, perms, permsCode,
 						recursive);
 //				File f = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
-				File f = new File(REPOSITORY_BASE_URL, path);
+				File f = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 				setPermissions(f, permsCode, perms, recursive);
 			}
 			return FileManageUtil.success(params);

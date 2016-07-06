@@ -13,7 +13,7 @@ import remoteFileManage.FileManageUtil;
 
 public class CreateFolder implements FileCommand {
 		
-	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			String path = params.getString("newPath");
 
@@ -24,7 +24,7 @@ public class CreateFolder implements FileCommand {
 
 			LOG.debug("addFolder path: {} name: {}", originalFile, newFile);
 			// File newDir = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL + originalFile), newFile);
-			File newDir = new File(REPOSITORY_BASE_URL + originalFile, newFile);
+			File newDir = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + originalFile, newFile);
 
 			if (!newDir.mkdir()) {
 				throw new Exception("Can't create directory: " + newDir.getAbsolutePath());

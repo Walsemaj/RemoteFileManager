@@ -14,7 +14,7 @@ import remoteFileManage.FileManageUtil;
 
 public class Move implements FileCommand {
 	
-	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			JSONArray array = params.getJSONArray("items");
 
@@ -29,8 +29,8 @@ public class Move implements FileCommand {
 
 				LOG.debug("copy from: {} to:{}", REPOSITORY_BASE_URL + path, REPOSITORY_BASE_URL + newPath + "/" + filename);
 
-				File srcFile = new File(REPOSITORY_BASE_URL, path);
-				File destFile = new File(REPOSITORY_BASE_URL, newPath + "/" + filename);
+				File srcFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
+				File destFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), newPath + "/" + filename);
 				if (srcFile.isFile()) {
 					FileUtils.moveFile(srcFile, destFile);
 				} else {

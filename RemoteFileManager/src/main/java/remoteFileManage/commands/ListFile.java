@@ -26,7 +26,7 @@ import remoteFileManage.FileManageUtil;
 
 public class ListFile implements FileCommand {
 
-	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			boolean onlyFolders;
 			try {
@@ -38,7 +38,7 @@ public class ListFile implements FileCommand {
 
 			// File dir = new File(context.getRealPath(REPOSITORY_BASE_URL),
 			// path);
-			File dir = new File(REPOSITORY_BASE_URL, path);
+			File dir = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 			File[] fileList = dir.listFiles();
 			LOG.debug("ListFile: REPOSITORY_BASE_URL=" + REPOSITORY_BASE_URL + " PATH=" + path);
 

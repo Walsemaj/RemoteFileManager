@@ -11,14 +11,14 @@ import remoteFileManage.FileManageUtil;
 
 public class EditFile implements FileCommand {
 	
-	public JSONObject apply(ServletContext context, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		// get content
 		try {
 			String path = params.getString("item");
 			LOG.debug("editFile path: {}", path);
 
 //			File srcFile = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
-			File srcFile = new File(REPOSITORY_BASE_URL, path);
+			File srcFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 			String content = FileUtils.readFileToString(srcFile);
 
 			return new JSONObject().put("result", content);

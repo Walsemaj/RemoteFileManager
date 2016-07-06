@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +14,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class FileManageUtil {
+	
+	public static String getPath(ServletContext context, Boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL) {
+		if(CONTEXT_GET_REAL_PATH) 
+			return context.getRealPath(REPOSITORY_BASE_URL);
+		else
+			return REPOSITORY_BASE_URL;
+	}
 	
 	public static void seterror(Throwable t, HttpServletResponse response) throws IOException {
 		try {
