@@ -151,9 +151,10 @@ public class FileManagePermission {
 			fileCurrentPermissions.put(FileManageConstant.PERMISSION_CLASS_OWNER, fileCurrentPermissions.get(FileManageConstant.PERMISSION_CLASS_GROUP));
 		}
 
-		fileCurrentPermissions.forEach((k, v) -> {
-			System.out.println("File Current Permissions: " + k + " Principal: " + v.getPrincipalName() + " Permission Class: " + v.toString());
-		});	
+		//1.8
+//		fileCurrentPermissions.forEach((k, v) -> {
+//			System.out.println("File Current Permissions: " + k + " Principal: " + v.getPrincipalName() + " Permission Class: " + v.toString());
+//		});	
 		
 		int count = 0;
 		Iterator<Entry<String, String>> it = UserClass.entrySet().iterator();
@@ -186,13 +187,26 @@ public class FileManagePermission {
 	    String principalName = StringUtils.split(currentPermissionObject.getPrincipalName(), "(")[0].trim();
 	    
 	    //RemoveAll since every access are on the same record
-	    currentPermissionObject.getListOfAclEntry().stream().filter(entry -> entry !=null).forEach((entry) ->  {
+	    //1.8
+//	    currentPermissionObject.getListOfAclEntry().stream().filter(entry -> entry !=null).forEach((entry) ->  {
+//	    		System.out.println("Contains Entry: " + aclEntries.contains(entry));
+//	    		System.out.println("Remove Entry: " + entry.principal());
+//	    		System.out.println("Remove Entry: " + entry.permissions());
+//	    		aclEntries.remove(entry);
+//	    	}
+//	    );
+	    
+	    Iterator<AclEntry> it = currentPermissionObject.getListOfAclEntry().iterator();
+	    while(it.hasNext())
+	    {
+	    	AclEntry entry = it.next();
+	    	if(entry != null) {
 	    		System.out.println("Contains Entry: " + aclEntries.contains(entry));
 	    		System.out.println("Remove Entry: " + entry.principal());
 	    		System.out.println("Remove Entry: " + entry.permissions());
 	    		aclEntries.remove(entry);
 	    	}
-	    );
+	    }
 	    
 		if(newPermissionObject.getCanRead())
 		{
@@ -262,35 +276,9 @@ public class FileManagePermission {
 		
 		public ClassPermissionObject(AclEntry aclEntry) {
 			principalName = aclEntry.principal().toString();
-			CanRead = aclEntry.permissions().stream().filter(AclEntryPermissions -> {
-				try {
-					LOG.debug("CanRead: " + AclEntryPermissions.toString());
-					READ_ACCESS.valueOf(AclEntryPermissions.toString());
-					return true;
-				} catch (Exception e) {
-					return false;
-				}
-			}).findAny().orElse(null) != null;
-
-			CanWrite = aclEntry.permissions().stream().filter(AclEntryPermissions -> {
-				try {
-					LOG.debug("CanWrite: " + AclEntryPermissions.toString());
-					WRITE_ACCESS.valueOf(AclEntryPermissions.toString());
-					return true;
-				} catch (Exception e) {
-					return false;
-				}
-			}).findAny().orElse(null) != null;
-
-			CanExecute = aclEntry.permissions().stream().filter(AclEntryPermissions -> {
-				try {
-					LOG.debug("CanExecute: " + AclEntryPermissions.toString());
-					EXECUTE_ACCESS.valueOf(AclEntryPermissions.toString());
-					return true;
-				} catch (Exception e) {
-					return false;
-				}
-			}).findAny().orElse(null) != null;
+			this.CanRead = validAclEntryPermissions(READ_ACCESS.class, aclEntry);
+			this.CanWrite = validAclEntryPermissions(WRITE_ACCESS.class, aclEntry);
+			this.CanExecute = validAclEntryPermissions(EXECUTE_ACCESS.class, aclEntry);
 			
 			this.aclEntries = new LinkedList<AclEntry>();
 			this.aclEntries.add(aclEntry);
@@ -299,43 +287,19 @@ public class FileManagePermission {
 		public ClassPermissionObject(ClassPermissionObject classPerms, AclEntry aclEntry) {
 			principalName = aclEntry.principal().toString();
 			if (!classPerms.getCanRead()) {
-				this.CanRead = aclEntry.permissions().stream().filter(AclEntryPermissions -> {
-					try {
-						LOG.debug("CanRead: " + AclEntryPermissions.toString());
-						READ_ACCESS.valueOf(AclEntryPermissions.toString());
-						return true;
-					} catch (Exception e) {
-						return false;
-					}
-				}).findAny().orElse(null) == null;
+				this.CanRead = validAclEntryPermissions(READ_ACCESS.class, aclEntry);
 			} else {
 				this.CanRead = classPerms.getCanRead();
 			}
 
 			if (!classPerms.getCanWrite()) {
-				this.CanWrite = aclEntry.permissions().stream().filter(AclEntryPermissions -> {
-					try {
-						LOG.debug("CanRead: " + AclEntryPermissions.toString());
-						WRITE_ACCESS.valueOf(AclEntryPermissions.toString());
-						return true;
-					} catch (Exception e) {
-						return false;
-					}
-				}).findAny().orElse(null) == null;
+				this.CanWrite = validAclEntryPermissions(WRITE_ACCESS.class, aclEntry);
 			} else {
 				this.CanWrite = classPerms.getCanWrite();
 			}
 
 			if (!classPerms.getCanExecute()) {
-				this.CanExecute = aclEntry.permissions().stream().filter(AclEntryPermissions -> {
-					try {
-						LOG.debug("CanRead: " + AclEntryPermissions.toString());
-						EXECUTE_ACCESS.valueOf(AclEntryPermissions.toString());
-						return true;
-					} catch (Exception e) {
-						return false;
-					}
-				}).findAny().orElse(null) == null;
+				this.CanExecute = validAclEntryPermissions(EXECUTE_ACCESS.class, aclEntry);
 			} else {
 				this.CanExecute = classPerms.getCanExecute();
 			}
@@ -350,6 +314,21 @@ public class FileManagePermission {
 			this.CanWrite = (perms.charAt(1) == FileManageConstant.WRITE);
 			this.CanExecute = (perms.charAt(2) == FileManageConstant.EXECUTE);
 			this.aclEntries = null;
+		}
+		
+		public <E extends Enum<E>> boolean validAclEntryPermissions(Class<E> enumData, AclEntry aclEntry) {
+			Iterator<AclEntryPermission> it = aclEntry.permissions().iterator();
+			while(it.hasNext()) {
+				AclEntryPermission perm = it.next();
+				try {
+					LOG.debug(enumData.getName() + ": " + perm.toString());
+					Enum.valueOf(enumData.getEnumConstants()[0].<E>getClass(), perm.toString());
+					return true;
+				} catch (Exception e) {
+					return false;
+				}
+			}
+			return false;
 		}
 
 		@Override
@@ -378,7 +357,7 @@ public class FileManagePermission {
 		}
 		
 		public List<AclEntry> getListOfAclEntry() {
-			return aclEntries == null? new LinkedList<>() : aclEntries;
+			return aclEntries == null? new LinkedList<AclEntry>() : aclEntries;
 		}
 	}
 }
