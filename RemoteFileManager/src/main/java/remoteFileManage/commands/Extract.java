@@ -63,6 +63,11 @@ public class Extract implements FileCommand {
 			System.out.println("Target Folder (folderName): " + targetFolder);
 			System.out.println("Zip Path: " + FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + sourceFile);
 
+			File newDir = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + sourceFolder + "/", targetFolder);
+			if (!newDir.mkdir()) {
+				throw new Exception("Can't create directory: " + newDir.getAbsolutePath());
+			}
+			
 			byte[] buf = new byte[1024];
 			ZipInputStream zipinputstream = null;
 			ZipEntry zipentry;
@@ -75,7 +80,7 @@ public class Extract implements FileCommand {
 				System.out.println("Original Zipentry Name: " + zipentry.getName());
 				String[] targetFileName = StringUtils.split(zipentry.getName(), '\\');
 				System.out.println("TargetFileName: " + targetFileName[targetFileName.length-1]);
-				String entryName = FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + sourceFolder + "/" + targetFileName[targetFileName.length-1];
+				String entryName = FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + sourceFolder + "/" + targetFolder + "/" + targetFileName[targetFileName.length-1];
 //				entryName = entryName.replace('/', File.separatorChar);
 //				entryName = entryName.replace('\\', File.separatorChar);
 				System.out.println("entryname " + entryName);
