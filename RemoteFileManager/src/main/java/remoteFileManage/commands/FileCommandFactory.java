@@ -1,12 +1,12 @@
 package remoteFileManage.commands;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,16 @@ public final class FileCommandFactory {
 	}
 
 	public void listCommands() {
-		LOG.info("Enabled file comamnds: " + fileCommands.keySet().stream().map(k->k.name()).collect(Collectors.joining(",", "{", "}")));
+		//1.8
+//		LOG.info("Enabled file comamnds: " + fileCommands.keySet().stream().map(k->k.name()).collect(Collectors.joining(",", "{", "}")));
+		Iterator<Action> it = fileCommands.keySet().iterator();
+		String output = ""; 
+		while(it.hasNext())
+		{
+			Action action = it.next();
+			output += action.name() + "|";
+		}
+		LOG.info("Enabled file comamnds: " + output);
 	}
 
 	public static FileCommandFactory init() {
