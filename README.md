@@ -13,6 +13,6 @@ Run
 2) cd RemoteFileManager/RemoteFileManager<br>
 3) mvn package<br>
 4)<br>
-    <p>On Windows, target/bin/webapp.bat</p><br>
-    <p>On Linux, sh target/bin/webapp</p><br>
+<p>    On Windows, target/bin/webapp.bat</p><br>
+<p>    On Linux, sh target/bin/webapp</p><br>
 5) localhost:8080/<br>
