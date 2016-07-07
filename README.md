@@ -16,7 +16,7 @@ Now able to run under <b>WINDOWS</b> environment, besides <b>LINUX</b>.
 1) git clone https://github.com/Walsemaj/RemoteFileManager<br>
 2) call RemoteFileManager/remoteFS.bat<br>
 
-<h3>Linux only</h3>
+<h3>LINUX</h3>
 1) git clone https://github.com/Walsemaj/RemoteFileManager<br>
 2) ./RemoteFileManager/remoteFS.sh start<br>
 
