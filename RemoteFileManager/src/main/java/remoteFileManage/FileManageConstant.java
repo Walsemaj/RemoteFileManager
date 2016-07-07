@@ -25,7 +25,7 @@ public class FileManageConstant {
 	public static final String POSIX_PERMISSION_WRITE_SUFFIX = "_WRITE";
 	public static final String POSIX_PERMISSION_EXECUTE_SUFFIX = "_EXECUTE";
 	
-	public static final List<String> PERMISSION_GROUP_LIST = new LinkedList<String>(Arrays.asList(FileManageConstant.PERMISSION_CLASS_OWNER, FileManageConstant.PERMISSION_CLASS_OWNER, FileManageConstant.PERMISSION_CLASS_OTHERS));
+	public static final List<String> PERMISSION_GROUP_LIST = new LinkedList<String>(Arrays.asList(FileManageConstant.PERMISSION_CLASS_OWNER, FileManageConstant.PERMISSION_CLASS_GROUP, FileManageConstant.PERMISSION_CLASS_OTHERS));
 	
 	public static final String EMPTY_PERMISSION_CLASS = "---";
 }
