@@ -248,11 +248,12 @@ public class FileManagePermission {
 			builder.setPermissions(EXECUTE_ACCESS.DEFAULT.returnSetOfAclEntryPermission());
 			aclEntries.add(builder.build());
 		}
-		
-//		for (AclEntry aclEntry : aclEntries) {
-//	    System.out.println("Final Image PRINCIPAL: " + aclEntry.principal());
-//	    System.out.println("Final Image PERMISSIONS: " + aclEntry.permissions() + "\n");		
-//		}
+
+		if(LOG.isDebugEnabled())
+			for (AclEntry aclEntry : aclEntries) {
+			    LOG.debug("Final Image PRINCIPAL: " + aclEntry.principal());
+			    LOG.debug("Final Image PERMISSIONS: " + aclEntry.permissions() + "\n");		
+			}
 		
 		return aclEntries;
 	}
