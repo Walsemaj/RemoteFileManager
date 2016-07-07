@@ -30,6 +30,10 @@ public class Extract implements FileCommand {
 			System.out.println("Target Folder (folderName): " + targetFolderName);
 			System.out.println("Zip File Path: " + basePath + sourceFileName); //{web.project.root}/WEB-INF/{source.folder}
 
+			System.out.println("Target Folder - basepath: " + basePath);
+			System.out.println("Target Folder - sourceFolderName: " + sourceFolderName.substring(1));
+			System.out.println("Target Folder - targetFolderName: " + targetFolderName);
+			
 			File targetFolder = new File(basePath + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)) + "/", targetFolderName);
 			
 			if(!targetFolder.exists()) {
@@ -47,7 +51,7 @@ public class Extract implements FileCommand {
 			zipentry = zipinputstream.getNextEntry();
 			while (zipentry != null) {
 				// for each entry to be extracted
-				LOG.debug("Original Zipentry Name: " + zipentry.getName());
+				LOG.info("Original Zipentry Name: " + zipentry.getName());
 				String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), '\\');
 				originalFileNameWithPath = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
 				String targetFileName = originalFileNameWithPath[originalFileNameWithPath.length-1]; //File might be zipped with absolute path
@@ -64,6 +68,9 @@ public class Extract implements FileCommand {
 				
 				int n;
 				FileOutputStream fileoutputstream;
+				System.out.println("targetFolder: " + targetFolder);
+				System.out.println("targetFileNameWithTargetDestination: " + targetFileNameWithTargetDestination);
+				
 				File newFile = new File(targetFolder, targetFileNameWithTargetDestination);
 				if (zipentry.isDirectory()) {
 					if (!newFile.mkdirs()) {
