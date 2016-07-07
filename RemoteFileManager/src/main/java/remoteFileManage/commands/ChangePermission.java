@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import remoteFileManage.FileManagePermission;
+import remoteFileManage.FileManagePosixPermission;
 import remoteFileManage.FileManageUtil;
 
 public class ChangePermission implements FileCommand {
@@ -39,12 +40,13 @@ public class ChangePermission implements FileCommand {
 		}
 	}
 	
-	private String setPermissions(File file, String permsCode, String perms, boolean recursive) throws IOException {
+	private String setPermissions(File file, String permsCode, String perms, boolean recursive) throws IOException, ClassNotFoundException {
 		PosixFileAttributeView fileAttributeView = Files.getFileAttributeView(file.toPath(),
 				PosixFileAttributeView.class);
 		if (fileAttributeView == null) //For Windows
 			return setACL(file, perms, recursive);
-		fileAttributeView.setPermissions(PosixFilePermissions.fromString(permsCode));
+//		fileAttributeView.setPermissions(PosixFilePermissions.fromString(permsCode));
+		new FileManagePosixPermission().setPermissions(file, perms);
 		if (file.isDirectory() && recursive && file.listFiles() != null) {
 			for (File f : file.listFiles()) {
 				setPermissions(f, permsCode, perms, recursive);

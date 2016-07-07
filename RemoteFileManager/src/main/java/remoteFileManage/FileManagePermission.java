@@ -30,7 +30,7 @@ public class FileManagePermission {
 		UserClass = new LinkedHashMap<String, String>();
 		UserClass.put(FileManageConstant.BUILTIN_USER, FileManageConstant.PERMISSION_CLASS_OWNER);
 		UserClass.put(FileManageConstant.AUTHENTICAED_USERS, FileManageConstant.PERMISSION_CLASS_GROUP);
-		UserClass.put(FileManageConstant.EVERYONE, FileManageConstant.PERMISSION_CLASS_OTHER);
+		UserClass.put(FileManageConstant.EVERYONE, FileManageConstant.PERMISSION_CLASS_OTHERS);
 	};
 
 	enum READ_ACCESS {
@@ -106,7 +106,7 @@ public class FileManagePermission {
 		
 		permission += FilePermissions.get(FileManageConstant.PERMISSION_CLASS_OWNER)!=null? FilePermissions.get(FileManageConstant.PERMISSION_CLASS_OWNER).toString(): FileManageConstant.EMPTY_PERMISSION_CLASS;
 		permission += FilePermissions.get(FileManageConstant.PERMISSION_CLASS_GROUP)!=null? FilePermissions.get(FileManageConstant.PERMISSION_CLASS_GROUP).toString(): FileManageConstant.EMPTY_PERMISSION_CLASS;
-		permission += FilePermissions.get(FileManageConstant.PERMISSION_CLASS_OTHER)!=null? FilePermissions.get(FileManageConstant.PERMISSION_CLASS_OTHER).toString(): FileManageConstant.EMPTY_PERMISSION_CLASS;
+		permission += FilePermissions.get(FileManageConstant.PERMISSION_CLASS_OTHERS)!=null? FilePermissions.get(FileManageConstant.PERMISSION_CLASS_OTHERS).toString(): FileManageConstant.EMPTY_PERMISSION_CLASS;
 		
 		return permission;
 	}
@@ -114,7 +114,7 @@ public class FileManagePermission {
 	public void setPermissions(File file, String perms)  throws IOException {
 		//Split "---------" into "---", "---", "---"
 		String[] ps = perms.split("(?<=\\G...)");
-		for(String code : ps) LOG.debug("SetPermissions: " + code);
+		if(LOG.isDebugEnabled()) for(String code : ps) LOG.debug("SetPermissions: " + code);
 		
 		
 		Map<String, ClassPermissionObject> fileCurrentPermissions = new HashMap<>();
