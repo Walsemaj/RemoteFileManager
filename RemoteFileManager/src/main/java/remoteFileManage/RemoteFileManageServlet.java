@@ -25,14 +25,12 @@ import remoteFileManage.commands.UploadFile;
 
 /**
  * This servlet serve angular-filemanager call<br>
- * It's here for example purpose, to use it you have to put it in your java web
- * project<br>
- * Put in web.xml the servlet mapping
- * <br>
+ * It's here for example purpose, <br>
+ * it can be executed right away with embedde tomcat <br>
  * During initialization this servlet load some config properties from a file
  * called angular-filemanager.properties in your classes folder. You can set
- * repository.base.url <br>
- * Default values are : repository.base.url = "" 
+ * repository.base.url / context.get.real.path <br>
+ * Default values are : repository.base.url = "", context.get.real.path = false;
  * <br>
  * 
  * @author Paolo Biavati https://github.com/paolobiavati
@@ -95,8 +93,6 @@ public class RemoteFileManageServlet extends HttpServlet {
 			boolean preview = BooleanUtils.toBoolean(request.getParameter("preview"));
 			String path = request.getParameter("path");
 	
-//			File file = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL), path);
-//			File file = new File(REPOSITORY_BASE_URL, path);
 			File file = new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL));
 	
 			if (!file.isFile()) {
