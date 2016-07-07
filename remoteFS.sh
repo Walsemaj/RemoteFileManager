@@ -1,10 +1,9 @@
 #!/bin/bash
 
 refresh () {
+ cd ..
  rm -rf RemoteFileManager/
  git clone https://github.com/Walsemaj/RemoteFileManager
- cd RemoteFileManager/RemoteFileManager
- mvn package
 }
 
 copyLog () {
@@ -12,6 +11,8 @@ copyLog () {
 }
 
 start () {
+ cd RemoteFileManager/RemoteFileManager
+ mvn package
  sh RemoteFileManager/RemoteFileManager/target/bin/webapp
 }
 
