@@ -23,16 +23,12 @@ public class Extract implements FileCommand {
 			String sourceFileName = params.getString("item").substring(1); //WEB-INF/{source.folder}/{file}.zip
 			String sourceFolderName = params.getString("destination"); //WEB-INF/{source.folder}
 			String targetFolderName = params.getString("folderName"); //{target.folder}
-			String basePath = FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL);
-			
-			System.out.println("Source File (item): " + sourceFileName);
-			System.out.println("Source Folder (destination): " + sourceFolderName);
-			System.out.println("Target Folder (folderName): " + targetFolderName);
-			System.out.println("Zip File Path: " + basePath + sourceFileName); //{web.project.root}/WEB-INF/{source.folder}
+			String basePath = FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL);			
 
-			System.out.println("Target Folder - basepath: " + basePath);
-			System.out.println("Target Folder - sourceFolderName: " + sourceFolderName.substring(1));
-			System.out.println("Target Folder - targetFolderName: " + targetFolderName);
+			LOG.debug("sourceFileName: " + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)));			
+			LOG.debug("sourceFolderName: " + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)));
+			LOG.debug("targetFolderName: " + targetFolderName);
+			LOG.debug("basepath: " + basePath);
 			
 			File targetFolder = new File(basePath + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)) + "/", targetFolderName);
 			
@@ -55,24 +51,11 @@ public class Extract implements FileCommand {
 				String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), '\\');
 				originalFileNameWithPath = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
 				String targetFileName = originalFileNameWithPath[originalFileNameWithPath.length-1]; //File might be zipped with absolute path
-				
-				String targetFileNameWithTargetDestination = basePath + sourceFolderName + "/" + targetFolderName + "/" + targetFileName;
-				LOG.info("Before replacement: " + targetFileNameWithTargetDestination);				
-				targetFileNameWithTargetDestination = targetFileNameWithTargetDestination.replace('/', File.separatorChar);
-				targetFileNameWithTargetDestination = targetFileNameWithTargetDestination.replace('\\', File.separatorChar);				
-				LOG.info("Target File Name With Target Destination: " + targetFileNameWithTargetDestination);
-				
-				originalFileNameWithPath = StringUtils.split(targetFileNameWithTargetDestination, '\\');
-				originalFileNameWithPath = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/');
-				targetFileNameWithTargetDestination = originalFileNameWithPath[originalFileNameWithPath.length-1];
-				LOG.info("Extracting file to: " + targetFileNameWithTargetDestination);
+				LOG.info("New Zipentry Name: " + targetFileName);
 				
 				int n;
 				FileOutputStream fileoutputstream;
-				System.out.println("targetFolder: " + targetFolder);
-				System.out.println("targetFileNameWithTargetDestination: " + targetFileNameWithTargetDestination);
-				
-				File newFile = new File(targetFolder, targetFileNameWithTargetDestination);
+				File newFile = new File(targetFolder, targetFileName);
 				if (zipentry.isDirectory()) {
 					if (!newFile.mkdirs()) {
 						break;
