@@ -61,10 +61,10 @@ public class Extract implements FileCommand {
 				String targetFileName = originalFileNameWithPath[originalFileNameWithPath.length-1]; //File might be zipped with absolute path
 				
 				String targetFileNameWithTargetDestination = basePath + sourceFolderName + "/" + targetFolder + "/" + targetFileName;
-				
+				LOG.info("Before replacement: " + targetFileNameWithTargetDestination);				
 				targetFileNameWithTargetDestination = targetFileNameWithTargetDestination.replace('/', File.separatorChar);
 				targetFileNameWithTargetDestination = targetFileNameWithTargetDestination.replace('\\', File.separatorChar);				
-				LOG.debug("Target File Name With Target Destination: " + targetFileNameWithTargetDestination);
+				LOG.info("Target File Name With Target Destination: " + targetFileNameWithTargetDestination);
 				
 				originalFileNameWithPath = StringUtils.split(targetFileNameWithTargetDestination, '\\');
 				targetFileNameWithTargetDestination = originalFileNameWithPath[originalFileNameWithPath.length-1];
