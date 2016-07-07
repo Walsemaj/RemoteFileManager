@@ -45,7 +45,7 @@ public final class FileCommandFactory {
 			Action action = it.next();
 			output += action.name() + "|";
 		}
-		LOG.info("Enabled file comamnds: " + output);
+		LOG.info("Enabled file comamnds: {}", output);
 	}
 
 	public static FileCommandFactory init() {

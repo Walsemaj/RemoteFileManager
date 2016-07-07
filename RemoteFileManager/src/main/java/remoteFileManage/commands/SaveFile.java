@@ -20,7 +20,6 @@ public class SaveFile implements FileCommand {
 			LOG.debug("saveFile path: {} content: isNotBlank {}, size {}", path, StringUtils.isNotBlank(content),
 					content != null ? content.length() : 0);
 
-//			File srcFile = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
 			File srcFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 			FileUtils.writeStringToFile(srcFile, content);
 

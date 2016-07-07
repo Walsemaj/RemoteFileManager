@@ -35,12 +35,9 @@ public class ListFile implements FileCommand {
 				onlyFolders = false;
 			}
 			String path = params.getString("path");
-
-			// File dir = new File(context.getRealPath(REPOSITORY_BASE_URL),
-			// path);
 			File dir = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 			File[] fileList = dir.listFiles();
-			LOG.debug("ListFile: REPOSITORY_BASE_URL=" + REPOSITORY_BASE_URL + " PATH=" + path);
+			LOG.debug("ListFile: REPOSITORY_BASE_URL={} PATH={}", REPOSITORY_BASE_URL, path);
 
 			List<JSONObject> resultList = new ArrayList<JSONObject>();
 			SimpleDateFormat dt = new SimpleDateFormat(FileManageConstant.DATE_FORMAT);
@@ -82,7 +79,7 @@ public class ListFile implements FileCommand {
 		LOG.debug(f.toString());
 		AclFileAttributeView aclView = Files.getFileAttributeView(f.toPath(), AclFileAttributeView.class);
 		if (aclView == null) {
-			System.out.format("ACL view  is not  supported.%n");
+			LOG.error("ACL view  is not  supported.%n");
 			throw new IOException();
 		}
 		AclFileAttributeView fileAttributeView = Files.getFileAttributeView(f.toPath(), AclFileAttributeView.class);

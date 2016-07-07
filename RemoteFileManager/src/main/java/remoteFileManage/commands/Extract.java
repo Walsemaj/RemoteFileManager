@@ -18,17 +18,16 @@ public class Extract implements FileCommand {
 			
 	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL,
 			JSONObject params) throws Exception {
-		// "item":"/temp/temp2/total.zip","destination":"/temp/temp2","action":"extract","folderName":"total2"
 		try {
 			String sourceFileName = params.getString("item").substring(1); //WEB-INF/{source.folder}/{file}.zip
 			String sourceFolderName = params.getString("destination"); //WEB-INF/{source.folder}
 			String targetFolderName = params.getString("folderName"); //{target.folder}
 			String basePath = FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL);			
 
-			LOG.debug("sourceFileName: " + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)));			
-			LOG.debug("sourceFolderName: " + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)));
-			LOG.debug("targetFolderName: " + targetFolderName);
-			LOG.debug("basepath: " + basePath);
+			LOG.debug("sourceFileName: {}", sourceFolderName);			
+			LOG.debug("sourceFolderName: {}", (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)));
+			LOG.debug("targetFolderName: {}", targetFolderName);
+			LOG.debug("basepath: {}", basePath);
 			
 			File targetFolder = new File(basePath + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)) + "/", targetFolderName);
 			
@@ -47,11 +46,11 @@ public class Extract implements FileCommand {
 			zipentry = zipinputstream.getNextEntry();
 			while (zipentry != null) {
 				// for each entry to be extracted
-				LOG.info("Original Zipentry Name: " + zipentry.getName());
+				LOG.debug("Original Zipentry Name: {}", zipentry.getName());
 				String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), '\\');
 				originalFileNameWithPath = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
 				String targetFileName = originalFileNameWithPath[originalFileNameWithPath.length-1]; //File might be zipped with absolute path
-				LOG.info("New Zipentry Name: " + targetFileName);
+				LOG.debug("New Zipentry Name: {}", targetFileName);
 				
 				int n;
 				FileOutputStream fileoutputstream;

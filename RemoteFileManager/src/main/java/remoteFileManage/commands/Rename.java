@@ -16,9 +16,6 @@ public class Rename implements FileCommand {
 			String path = params.getString("item");
 			String newpath = params.getString("newItemPath");
 
-//			File srcFile = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
-//			File destFile = new File(context.getRealPath(REPOSITORY_BASE_URL), newpath);
-			
 			File srcFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 			File destFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), newpath);			
 			if (srcFile.isFile()) {

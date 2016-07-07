@@ -16,7 +16,6 @@ public class FileManagePosixPermission {
 	private static final Logger LOG = Logger.getLogger(FileManagePosixPermission.class); 
 	
 	public void setPermissions(File file, String perms)  throws IOException, ClassNotFoundException {
-		//Split "---------" into "---", "---", "---"
 		String[] psList = perms.split("(?<=\\G...)");
 		if(LOG.isDebugEnabled()) for(String code : psList) LOG.debug("SetPermissions: " + code);
 		

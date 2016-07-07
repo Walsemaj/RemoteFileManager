@@ -18,7 +18,6 @@ public class Delete implements FileCommand {
 			JSONArray array = params.getJSONArray("items");
 			for (Object path : array) {
 				LOG.debug("delete {}", path.toString());
-//				File srcFile = new File(context.getRealPath(REPOSITORY_BASE_URL), path.toString());
 				File srcFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path.toString());
 				if (!FileUtils.deleteQuietly(srcFile)) {
 					throw new Exception("Can't delete: " + srcFile.getAbsolutePath());

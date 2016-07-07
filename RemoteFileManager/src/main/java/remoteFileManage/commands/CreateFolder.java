@@ -23,9 +23,7 @@ public class CreateFolder implements FileCommand {
 			String originalFile = StringUtils.substringBefore(path.substring(1), newFile);
 
 			LOG.debug("addFolder path: {} name: {}", originalFile, newFile);
-			// File newDir = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL + originalFile), newFile);
 			File newDir = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + originalFile, newFile);
-
 			if (!newDir.mkdir()) {
 				throw new Exception("Can't create directory: " + newDir.getAbsolutePath());
 			}

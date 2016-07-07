@@ -172,7 +172,6 @@ public class FileManagePermission {
 			//Initial new Class Permission Object
 				try {
 					LOG.info("Set new ACL for: " + fileCurrentPermissions.get(me.getValue()).getPrincipalName());
-//					System.out.println("Full List After SetACL(): " + setNewACL(aclEntries, fileCurrentPermissions.get(me.getValue()), new ClassPermissionObject(me.getValue() + "_NEW", ps[count])));
 					fileAttributeView.setAcl(setNewACL(aclEntries, fileCurrentPermissions.get(me.getValue()), new ClassPermissionObject(me.getValue() + "_NEW", ps[count])));
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

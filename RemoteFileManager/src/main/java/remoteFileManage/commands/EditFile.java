@@ -17,7 +17,6 @@ public class EditFile implements FileCommand {
 			String path = params.getString("item");
 			LOG.debug("editFile path: {}", path);
 
-//			File srcFile = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
 			File srcFile = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 			String content = FileUtils.readFileToString(srcFile);
 
