@@ -63,6 +63,7 @@ public class Extract implements FileCommand {
 				LOG.info("Target File Name With Target Destination: " + targetFileNameWithTargetDestination);
 				
 				originalFileNameWithPath = StringUtils.split(targetFileNameWithTargetDestination, '\\');
+				originalFileNameWithPath = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/');
 				targetFileNameWithTargetDestination = originalFileNameWithPath[originalFileNameWithPath.length-1];
 				LOG.info("Extracting file to: " + targetFileNameWithTargetDestination);
 				
