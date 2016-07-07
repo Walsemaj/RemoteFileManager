@@ -36,15 +36,6 @@ public class Extract implements FileCommand {
 				if (!targetFolder.mkdir()) {
 					throw new Exception("Can't create directory: " + targetFolder.getAbsolutePath());
 				}
-//				targetFolder.setReadable(true);
-//				targetFolder.setWritable(true);
-//				
-//				String[] data = {targetFolder.getAbsolutePath()};
-//				JSONArray ja = new JSONArray().put(data);
-//				JSONObject items = new JSONObject()
-//						.put("perms", "rwxrwxrwx").put("permsCode", "777").put("recursive", "false").put("items", ja);
-//				
-//				new ChangePermission().apply(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL, items);
 			}
 			
 			byte[] buf = new byte[1024];
@@ -58,9 +49,10 @@ public class Extract implements FileCommand {
 				// for each entry to be extracted
 				LOG.debug("Original Zipentry Name: " + zipentry.getName());
 				String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), '\\');
+				originalFileNameWithPath = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
 				String targetFileName = originalFileNameWithPath[originalFileNameWithPath.length-1]; //File might be zipped with absolute path
 				
-				String targetFileNameWithTargetDestination = basePath + sourceFolderName + "/" + targetFolder + "/" + targetFileName;
+				String targetFileNameWithTargetDestination = basePath + sourceFolderName + "/" + targetFolderName + "/" + targetFileName;
 				LOG.info("Before replacement: " + targetFileNameWithTargetDestination);				
 				targetFileNameWithTargetDestination = targetFileNameWithTargetDestination.replace('/', File.separatorChar);
 				targetFileNameWithTargetDestination = targetFileNameWithTargetDestination.replace('\\', File.separatorChar);				
