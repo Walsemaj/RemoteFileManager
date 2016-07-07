@@ -14,14 +14,12 @@ Now able to run under <b>WINDOWS</b> environment, besides <b>LINUX</b>.
 
 <h3>Option #1</h3>
 1) git clone https://github.com/Walsemaj/RemoteFileManager<br>
-2) cd RemoteFileManager/RemoteFileManager<br>
-3) mvn package<br>
-4)<br>
-o On Windows, target/bin/webapp.bat<br>
-o On Linux, sh target/bin/webapp<br>
-5) http://localhost:8080/<br>
+2) call RemoteFileManager/remoteFS.bat<br>
 
 <h3>Option #2 (Linux only)</h3>
 1) git clone https://github.com/Walsemaj/RemoteFileManager<br>
 2) ./RemoteFileManager/remoteFS.sh start<br>
-3) http://localhost:8080/<br>
+
+<p>
+Go to http://localhost:8080/<br>
+</p>
