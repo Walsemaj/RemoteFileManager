@@ -13,7 +13,7 @@ copyLog () {
 start () {
  cd RemoteFileManager/RemoteFileManager
  mvn package
- sh RemoteFileManager/RemoteFileManager/target/bin/webapp
+ sh target/bin/webapp
 }
 
 option="${1}"
