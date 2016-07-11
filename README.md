@@ -23,3 +23,18 @@ Now able to run under <b>WINDOWS</b> environment, besides <b>LINUX</b>.
 <p>
 Go to http://localhost:8080/<br>
 </p>
+<hr>
+<h3>More Features <i>in angular-filemanager.properties<i></h3>
+1) Functions only be available for specific directory or file<br>
+restricted.functions=download,rename,copy,move,remove,getContent,edit,changePermissions,compress,extract<br>
+whitelisted.files=/test/test1234.txt,/test/test3456.txt<br>
+OR<br>
+whitelisted.files=/test/test1234.txt,\\<br>
+/test/test3456.txt<br>
+<br>
+2) Home directory setup<br>
+Root<br>
+o repository.base.url=/<br>
+Web Content Root<br>
+o repository.base.url=/<br>
+o context.get.real.path=true<br>
