@@ -16,11 +16,14 @@ import org.json.JSONObject;
 import remoteFileManage.FileManageConstant;
 import remoteFileManage.FileManageUtil;
 
-public class Compress implements FileCommand {
+public class Compress extends FileCommandBase{
 	
-	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	protected JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+		// "compressedFilename":"temp3","destination":"/temp","action":"compress","items":["/temp/temp2"]
+		// "compressedFilename":"total","destination":"/temp/temp2","action":"compress","items":["/temp/temp2/Testing.notesairdropdocument","/temp/temp2/SVN
+		// Readme.txt","/temp/temp2/Studies.txt"
 		try {
-			JSONArray path = params.getJSONArray("items"); 
+			JSONArray path = params.getJSONArray("items"); // "/public_html/compressed.zip"
 			String destination = params.getString("destination").substring(1);
 			String compressedFilename = params.getString("compressedFilename");
 
@@ -32,8 +35,8 @@ public class Compress implements FileCommand {
 			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
 			byte data[] = new byte[FileManageConstant.BUFFER];
-			
 			// get a list of files from current directory
+
 			for (Object obj : path) {
 				File f = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + obj.toString().substring(1));
 				LOG.debug("Compress file: " + REPOSITORY_BASE_URL + obj.toString().substring(1));

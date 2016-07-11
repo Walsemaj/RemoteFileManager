@@ -17,9 +17,9 @@ import remoteFileManage.FileManagePermission;
 import remoteFileManage.FileManagePosixPermission;
 import remoteFileManage.FileManageUtil;
 
-public class ChangePermission implements FileCommand {
+public class ChangePermission extends FileCommandBase {
 	
-	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
+	protected JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			JSONArray array = params.getJSONArray("items");
 			for (Object temp : array) {
@@ -29,6 +29,7 @@ public class ChangePermission implements FileCommand {
 				boolean recursive = params.getBoolean("recursive");
 				LOG.debug("changepermissions path: {} perms: {} permsCode: {} recursive: {}", path, perms, permsCode,
 						recursive);
+//				File f = new File(context.getRealPath(REPOSITORY_BASE_URL), path);
 				File f = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 				setPermissions(f, permsCode, perms, recursive);
 			}
@@ -44,6 +45,7 @@ public class ChangePermission implements FileCommand {
 				PosixFileAttributeView.class);
 		if (fileAttributeView == null) //For Windows
 			return setACL(file, perms, recursive);
+//		fileAttributeView.setPermissions(PosixFilePermissions.fromString(permsCode));
 		new FileManagePosixPermission().setPermissions(file, perms);
 		if (file.isDirectory() && recursive && file.listFiles() != null) {
 			for (File f : file.listFiles()) {
@@ -54,6 +56,7 @@ public class ChangePermission implements FileCommand {
 	}
 	
 	private String setACL(File file, String perms, boolean recursive) throws IOException {
+		//Test Commit
 		AclFileAttributeView aclView = Files.getFileAttributeView(file.toPath(), AclFileAttributeView.class);
 		if (aclView == null) {
 			System.out.format("ACL view  is not  supported.%n");

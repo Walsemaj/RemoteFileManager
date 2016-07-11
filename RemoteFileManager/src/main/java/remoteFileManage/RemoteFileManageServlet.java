@@ -25,12 +25,14 @@ import remoteFileManage.commands.UploadFile;
 
 /**
  * This servlet serve angular-filemanager call<br>
- * It's here for example purpose, <br>
- * it can be executed right away with embedde tomcat <br>
+ * It's here for example purpose, to use it you have to put it in your java web
+ * project<br>
+ * Put in web.xml the servlet mapping
+ * <br>
  * During initialization this servlet load some config properties from a file
  * called angular-filemanager.properties in your classes folder. You can set
- * repository.base.url / context.get.real.path <br>
- * Default values are : repository.base.url = "", context.get.real.path = false;
+ * repository.base.url <br>
+ * Default values are : repository.base.url = "" 
  * <br>
  * 
  * @author Paolo Biavati https://github.com/paolobiavati
@@ -53,15 +55,18 @@ public class RemoteFileManageServlet extends HttpServlet {
 
 		// load from properties file REPOSITORY_BASE_URL and DATE_FORMAT, use default if missing
 		InputStream propertiesFile = null;
-		factory = FileCommandFactory.init();
 		if(LOG.isDebugEnabled()) factory.listCommands();
 		try {
 			propertiesFile = getClass().getClassLoader().getResourceAsStream("angular-filemanager.properties");
+			
 			if (propertiesFile != null) {
 				Properties prop = new Properties();
 				// load a properties file from class path, inside static method
 				prop.load(propertiesFile);
+				
+				factory = FileCommandFactory.init(prop);
 				CONTEXT_GET_REAL_PATH = Boolean.valueOf(prop.getProperty("context.get.real.path")); //true - web content root
+				
 				REPOSITORY_BASE_URL = prop.getProperty("repository.base.url", REPOSITORY_BASE_URL);
 				if (!"".equals(REPOSITORY_BASE_URL)
 						&& !new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL)).isDirectory()) {
@@ -93,7 +98,9 @@ public class RemoteFileManageServlet extends HttpServlet {
 			boolean preview = BooleanUtils.toBoolean(request.getParameter("preview"));
 			String path = request.getParameter("path");
 	
-			File file = new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, path));
+//			File file = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL), path);
+//			File file = new File(REPOSITORY_BASE_URL, path);
+			File file = new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL));
 	
 			if (!file.isFile()) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource Not Found");

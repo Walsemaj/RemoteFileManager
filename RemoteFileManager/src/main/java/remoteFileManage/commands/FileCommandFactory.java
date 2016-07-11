@@ -1,7 +1,9 @@
 package remoteFileManage.commands;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -16,8 +18,13 @@ public final class FileCommandFactory {
 	private final HashMap<Action, FileCommand> fileCommands;
 	private static final Logger LOG = LoggerFactory.getLogger(FileCommandFactory.class);
 
-	private FileCommandFactory() {
+	private String WHITELISTED_FILES = "";
+	private String RESTRICTED_FUNCTIONS = "";
+	
+	private FileCommandFactory(Properties prop) throws IOException {
 		fileCommands = new HashMap<>();
+		WHITELISTED_FILES = prop.getProperty("whitelisted.files", "");
+		RESTRICTED_FUNCTIONS = prop.getProperty("restricted.functions", "");
 	}
 
 	public void addFileCommand(Action action, FileCommand fileCommand) {
@@ -27,11 +34,11 @@ public final class FileCommandFactory {
 	public JSONObject executeFileCommand(Action action, ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception {
 		try {
 			if (fileCommands.containsKey(action)) {
-				return fileCommands.get(action).apply(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL, params);
+				return fileCommands.get(action).applyCommand(context, CONTEXT_GET_REAL_PATH, WHITELISTED_FILES, RESTRICTED_FUNCTIONS, REPOSITORY_BASE_URL, params);
 			} else
 				throw new ServletException("not implemented");
 		} catch (Exception e) {
-			throw new ServletException("not implemented");
+			throw new ServletException(e);
 		}
 	}
 
@@ -45,11 +52,11 @@ public final class FileCommandFactory {
 			Action action = it.next();
 			output += action.name() + "|";
 		}
-		LOG.info("Enabled file comamnds: {}", output);
+		LOG.info("Enabled file comamnds: " + output);
 	}
 
-	public static FileCommandFactory init() {
-		FileCommandFactory factory = new FileCommandFactory();
+	public static FileCommandFactory init(Properties prop) throws IOException {
+		FileCommandFactory factory = new FileCommandFactory(prop);
 		factory.addFileCommand(Action.list, new ListFile());
 		factory.addFileCommand(Action.rename, new Rename());
 		factory.addFileCommand(Action.copy, new Copy());

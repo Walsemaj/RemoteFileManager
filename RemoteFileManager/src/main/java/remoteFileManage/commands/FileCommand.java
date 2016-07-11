@@ -9,5 +9,5 @@ import org.slf4j.LoggerFactory;
 public interface FileCommand {
 	Logger LOG = LoggerFactory.getLogger(FileCommand.class);
 	
-	public JSONObject apply(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String REPOSITORY_BASE_URL, JSONObject params) throws Exception;
+	public JSONObject applyCommand(ServletContext context, boolean CONTEXT_GET_REAL_PATH, String WHITELISTED_FILES, String RESTRICTED_FUNCTIONS, String REPOSITORY_BASE_URL, JSONObject params) throws Exception;
 }
