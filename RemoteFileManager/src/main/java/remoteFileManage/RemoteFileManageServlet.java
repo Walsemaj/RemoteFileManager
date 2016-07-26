@@ -100,7 +100,7 @@ public class RemoteFileManageServlet extends HttpServlet {
 	
 //			File file = new File(getServletContext().getRealPath(REPOSITORY_BASE_URL), path);
 //			File file = new File(REPOSITORY_BASE_URL, path);
-			File file = new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL));
+			File file = new File(FileManageUtil.getPath(getServletContext(), CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL), path);
 	
 			if (!file.isFile()) {
 				response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource Not Found");
