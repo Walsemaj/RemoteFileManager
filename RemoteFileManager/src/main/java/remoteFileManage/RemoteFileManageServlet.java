@@ -55,7 +55,7 @@ public class RemoteFileManageServlet extends HttpServlet {
 
 		// load from properties file REPOSITORY_BASE_URL and DATE_FORMAT, use default if missing
 		InputStream propertiesFile = null;
-		if(LOG.isDebugEnabled()) factory.listCommands();
+
 		try {
 			propertiesFile = getClass().getClassLoader().getResourceAsStream("angular-filemanager.properties");
 			
@@ -65,6 +65,8 @@ public class RemoteFileManageServlet extends HttpServlet {
 				prop.load(propertiesFile);
 				
 				factory = FileCommandFactory.init(prop);
+				if(LOG.isDebugEnabled()) factory.listCommands();
+				
 				CONTEXT_GET_REAL_PATH = Boolean.valueOf(prop.getProperty("context.get.real.path")); //true - web content root
 				
 				REPOSITORY_BASE_URL = prop.getProperty("repository.base.url", REPOSITORY_BASE_URL);
