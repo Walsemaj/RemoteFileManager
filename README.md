@@ -18,7 +18,8 @@ Now able to run under <b>WINDOWS</b> environment, besides <b>LINUX</b>.
 
 <h3>LINUX</h3>
 1) git clone https://github.com/Walsemaj/RemoteFileManager<br>
-2) ./RemoteFileManager/remoteFS.sh start<br>
+2) chmod 754 RemoteFileManager/remoteFS.sh<br>
+3) ./RemoteFileManager/remoteFS.sh start<br>
 
 <p>
 Go to http://localhost:8888/<br>
