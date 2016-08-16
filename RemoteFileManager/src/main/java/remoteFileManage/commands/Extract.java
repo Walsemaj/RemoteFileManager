@@ -66,13 +66,8 @@ public class Extract extends FileCommandBase{
 			String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), (SystemUtils.IS_OS_LINUX? '/': '\\'));
 			createTargetSubFolders(originalFileNameWithPath, targetFolderName);
 			
-//			String[] originalFileNameWithPathL = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
-//			String targetFileName = originalFileNameWithPathL[originalFileNameWithPathL.length-1]; //File might be zipped with absolute path
-//			LOG.debug("New Zipentry Name: " + targetFileName);
-			
 			int n;
 			FileOutputStream fileoutputstream;
-//			File newFile = new File(new File(targetFolderName), targetFileName);
 			File newFile = new File(new File(targetFolderName), zipentry.getName());
 			if (zipentry.isDirectory()) {
 				if (!newFile.mkdirs()) {
