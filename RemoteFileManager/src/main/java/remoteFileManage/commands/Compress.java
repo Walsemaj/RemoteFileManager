@@ -49,7 +49,7 @@ public class Compress extends FileCommandBase{
 	}
 	
 	private void zipDir(String dir2zip, ZipOutputStream zos) throws Exception {
-		System.out.println(dir2zip);
+		LOG.debug("zipDir: {}", dir2zip);
 		File zipFile = new File(dir2zip);
 		String[] dirList = zipFile.list();
 		byte[] readBuffer = new byte[2156];
