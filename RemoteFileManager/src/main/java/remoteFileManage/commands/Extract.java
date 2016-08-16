@@ -9,6 +9,7 @@ import java.util.zip.ZipInputStream;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -62,7 +63,7 @@ public class Extract extends FileCommandBase{
 		while (zipentry != null) {
 			// for each entry to be extracted
 			LOG.debug("Original Zipentry Name: " + zipentry.getName());
-			String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), '\\');
+			String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), (SystemUtils.IS_OS_LINUX? '/': '\\'));
 			createTargetSubFolders(originalFileNameWithPath, targetFolderName);
 			
 //			String[] originalFileNameWithPathL = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
