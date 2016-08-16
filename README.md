@@ -42,3 +42,6 @@ o repository.base.url=/<br>
 Web Content Root<br>
 o repository.base.url=/<br>
 o context.get.real.path=true<br>
+3) Set home directory as web root context 
+o context.get.real.path=true
+o repository.base.url=/WEB-INF/temp/
