@@ -29,51 +29,52 @@ public class Compress extends FileCommandBase{
 
 			LOG.debug("compress path: {} destination: {}", path, destination);
 
-			BufferedInputStream origin = null;
 			FileOutputStream dest = new FileOutputStream(
 					FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + destination + "/" + compressedFilename + ".zip");
 			ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
-			byte data[] = new byte[FileManageConstant.BUFFER];
-			// get a list of files from current directory
-
 			for (Object obj : path) {
-				File f = new File(FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + obj.toString().substring(1));
-				LOG.debug("Compress file: " + REPOSITORY_BASE_URL + obj.toString().substring(1));
-				if (f.isFile()) {
-					LOG.debug("Adding: " + f.getName());
-					FileInputStream fi = new FileInputStream(f);
-					origin = new BufferedInputStream(fi, FileManageConstant.BUFFER);
-					ZipEntry entry = new ZipEntry(f.toString());
-					out.putNextEntry(entry);
-					int count;
-					while ((count = origin.read(data, 0, FileManageConstant.BUFFER)) != -1) {
-						out.write(data, 0, count);
-					}
-					origin.close();
-				} else {
-					File[] files = f.listFiles();
-
-					for (File file : files) {
-						LOG.debug("Adding: " + file.getName());
-						FileInputStream fi = new FileInputStream(file);
-						origin = new BufferedInputStream(fi, FileManageConstant.BUFFER);
-						ZipEntry entry = new ZipEntry(file.toString());
-						out.putNextEntry(entry);
-						int count;
-						while ((count = origin.read(data, 0, FileManageConstant.BUFFER)) != -1) {
-							out.write(data, 0, count);
-						}
-						origin.close();
-					}
-				}
+				String pathName = FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL) + obj.toString().substring(1);
+				LOG.debug("Compress file: " + pathName);
+				zipDir(pathName, out);
 			}
+
 			out.close();
 
 			return FileManageUtil.success(params);
 		} catch (Exception e) {
 			LOG.error("compress", e);
 			return FileManageUtil.error(e.getMessage());
+		}
+	}
+	
+	private void zipDir(String dir2zip, ZipOutputStream zos) throws Exception {
+		System.out.println(dir2zip);
+		File zipFile = new File(dir2zip);
+		String[] dirList = zipFile.list();
+		byte[] readBuffer = new byte[2156];
+		int bytesIn = 0;
+		
+		// Empty Folder		
+		if(dirList.length == 0 && zipFile.isDirectory())
+			zos.putNextEntry(new ZipEntry(zipFile.getPath() + "/"));
+		
+		for (int i = 0; i < dirList.length; i++) {
+			File f = new File(zipFile, dirList[i]);
+			if (f.isDirectory()) {
+				// if the File object is a directory, call this
+				// function again to add its content recursively
+				String filePath = f.getPath();
+				zipDir(filePath, zos);
+				continue;
+			}
+			FileInputStream fis = new FileInputStream(f);
+			ZipEntry anEntry = new ZipEntry(f.getPath());
+			zos.putNextEntry(anEntry);
+			while ((bytesIn = fis.read(readBuffer)) != -1) {
+				zos.write(readBuffer, 0, bytesIn);
+			}
+			fis.close();
 		}
 	}
 }
