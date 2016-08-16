@@ -24,6 +24,10 @@ Now able to run under <b>WINDOWS</b> environment, besides <b>LINUX</b>.
 Go to http://localhost:8080/<br>
 </p>
 <hr>
+<p>
+<b>Port</b> can be amended under remoteFS.bat / remoteFS.sh
+</p>
+<hr>
 <h3>More Features <i>in angular-filemanager.properties</i></h3>
 1) Functions only be available for specific directory or file<br>
 restricted.functions=download,rename,copy,move,remove,getContent,edit,changePermissions,compress,extract<br>
