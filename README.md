@@ -21,7 +21,7 @@ Now able to run under <b>WINDOWS</b> environment, besides <b>LINUX</b>.
 2) ./RemoteFileManager/remoteFS.sh start<br>
 
 <p>
-Go to http://localhost:8080/<br>
+Go to http://localhost:8888/<br>
 </p>
 <hr>
 <p>
