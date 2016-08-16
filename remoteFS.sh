@@ -11,6 +11,7 @@ copyLog () {
 }
 
 start () {
+ export PORT=8888
  cd RemoteFileManager/RemoteFileManager
  mvn package
  sh target/bin/webapp
