@@ -25,7 +25,7 @@ public class Extract extends FileCommandBase{
 			String targetFolderName = params.getString("folderName"); //{target.folder}
 			String basePath = FileManageUtil.getPath(context, CONTEXT_GET_REAL_PATH, REPOSITORY_BASE_URL);			
 
-			LOG.debug("sourceFileName: " + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)));			
+			LOG.debug("sourceFileName: " + sourceFileName);			
 			LOG.debug("sourceFolderName: " + (CONTEXT_GET_REAL_PATH? sourceFolderName: sourceFolderName.substring(1)));
 			LOG.debug("targetFolderName: " + targetFolderName);
 			LOG.debug("basepath: " + basePath);
@@ -38,46 +38,75 @@ public class Extract extends FileCommandBase{
 				}
 			}
 			
-			byte[] buf = new byte[1024];
-			ZipInputStream zipinputstream = null;
-			ZipEntry zipentry;
-
-			zipinputstream = new ZipInputStream(new FileInputStream(basePath + sourceFileName));
-
-			zipentry = zipinputstream.getNextEntry();
-			while (zipentry != null) {
-				// for each entry to be extracted
-				LOG.info("Original Zipentry Name: " + zipentry.getName());
-				String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), '\\');
-				originalFileNameWithPath = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
-				String targetFileName = originalFileNameWithPath[originalFileNameWithPath.length-1]; //File might be zipped with absolute path
-				LOG.info("New Zipentry Name: " + targetFileName);
-				
-				int n;
-				FileOutputStream fileoutputstream;
-				File newFile = new File(targetFolder, targetFileName);
-				if (zipentry.isDirectory()) {
-					if (!newFile.mkdirs()) {
-						break;
-					}
-					zipentry = zipinputstream.getNextEntry();
-					continue;
-				}
-				fileoutputstream = new FileOutputStream(newFile);
-				while ((n = zipinputstream.read(buf, 0, 1024)) > -1) {
-					fileoutputstream.write(buf, 0, n);
-				}
-				fileoutputstream.close();
-				zipinputstream.closeEntry();
-				zipentry = zipinputstream.getNextEntry();
-			} // while
-
-			zipinputstream.close();
-
+			extractDir(basePath, sourceFileName, targetFolder.getAbsolutePath());
 			return FileManageUtil.success(params);
 		} catch (Exception e) {
 			LOG.error("extract", e);
 			return FileManageUtil.error(e.getMessage());
+		}
+	}
+	
+	private void extractDir(String basePath, String sourceFileName, String targetFolderName) throws Exception {
+		
+		LOG.info("Base Path: {}", basePath);
+		LOG.info("Source File Name: {}", sourceFileName);
+		LOG.info("Target Folder Name: {}", targetFolderName);
+		
+		byte[] buf = new byte[1024];
+		ZipInputStream zipinputstream = null;
+		ZipEntry zipentry;
+
+		zipinputstream = new ZipInputStream(new FileInputStream(basePath + sourceFileName));
+
+		zipentry = zipinputstream.getNextEntry();
+		while (zipentry != null) {
+			// for each entry to be extracted
+			LOG.debug("Original Zipentry Name: " + zipentry.getName());
+			String[] originalFileNameWithPath = StringUtils.split(zipentry.getName(), '\\');
+			createTargetSubFolders(originalFileNameWithPath, targetFolderName);
+			
+//			String[] originalFileNameWithPathL = StringUtils.split(originalFileNameWithPath[originalFileNameWithPath.length-1], '/'); //For Linux
+//			String targetFileName = originalFileNameWithPathL[originalFileNameWithPathL.length-1]; //File might be zipped with absolute path
+//			LOG.debug("New Zipentry Name: " + targetFileName);
+			
+			int n;
+			FileOutputStream fileoutputstream;
+//			File newFile = new File(new File(targetFolderName), targetFileName);
+			File newFile = new File(new File(targetFolderName), zipentry.getName());
+			if (zipentry.isDirectory()) {
+				if (!newFile.mkdirs()) {
+					break;
+				}
+				zipentry = zipinputstream.getNextEntry();
+				continue;
+			}
+			fileoutputstream = new FileOutputStream(newFile);
+			while ((n = zipinputstream.read(buf, 0, 1024)) > -1) {
+				fileoutputstream.write(buf, 0, n);
+			}
+			fileoutputstream.close();
+			zipinputstream.closeEntry();
+			zipentry = zipinputstream.getNextEntry();
+		} // while
+
+		zipinputstream.close();		
+	}
+	
+	private void createTargetSubFolders(String[] subFolders, String targetFolderName) throws Exception {
+		String baseFolder = targetFolderName + "/";
+		int count = 0;
+		for(String subFolderName: subFolders) {
+			LOG.debug("Base Folder: " + baseFolder);
+			LOG.debug("Create Sub Folder: " + subFolderName);
+			if(count == (subFolders.length-1)) break; //Skip the target zip entry
+			File subFolder = new File(baseFolder + subFolderName);
+			if(!subFolder.exists()) {
+				if (!subFolder.mkdir()) {
+					throw new Exception("Can't create directory: " + subFolder.getAbsolutePath());
+				}
+			}
+			baseFolder = baseFolder + subFolderName + "/";
+			count++;
 		}
 	}
 }
